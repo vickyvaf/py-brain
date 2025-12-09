@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to Py-Brain</h1>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <div class="auth-section">
+            <div id="login-box" class="login-box">
+                <h2>Login</h2>
+                <form action="{{ url_for('login') }}" method="post">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <span class="toggle-link" onclick="toggleAuth()">Register here</span></p>
+            </div>
+
+            <div id="register-box" class="register-box hidden">
+                <h2>Register</h2>
+                <form action="{{ url_for('register') }}" method="post">
+                    <input type="text" name="username" placeholder="Choose Username" required>
+                    <input type="password" name="password" placeholder="Choose Password" required>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <span class="toggle-link" onclick="toggleAuth()">Login here</span></p>
+            </div>
+        </div>
+
+        <script>
+            function toggleAuth() {
+                const loginBox = document.getElementById('login-box');
+                const registerBox = document.getElementById('register-box');
+
+                if (loginBox.classList.contains('hidden')) {
+                    loginBox.classList.remove('hidden');
+                    registerBox.classList.add('hidden');
+                } else {
+                    loginBox.classList.add('hidden');
+                    registerBox.classList.remove('hidden');
+                }
+            }
+        </script>
+        <a href="{{ url_for('home') }}" style="color: #fff; text-decoration: none;">
+            <p>Back to Home</p>
+        </a>
+    </div>
+</body>
+
+</html>

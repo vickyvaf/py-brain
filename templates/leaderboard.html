@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Top Brains</h1>
+            <br />
+            <nav>
+                <a href="{{ url_for('home') }}" class="btn-small">Home</a>
+                <a href="{{ url_for('quiz') }}" class="btn-small">Play Quiz</a>
+            </nav>
+        </header>
+        <br />
+        
+        <div class="leaderboard-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leader in leaders %}
+                    <tr>
+                        <td>#{{ loop.index }}</td>
+                        <td>{{ leader['username'] }}</td>
+                        <td>{{ leader['total_score'] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No scores yet. Be the first!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

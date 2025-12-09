@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Py-Brain</h1>
+            <p>The AI Playground</p>
+            <div id="weather-widget" class="weather-widget">
+                <span id="weather-text">Detecting Weather...</span>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const weatherText = document.getElementById('weather-text');
+                    
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(async position => {
+                            const { latitude, longitude } = position.coords;
+                            
+                            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+                            
+                            const geoUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+
+                            try {
+                                const [weatherRes, geoRes] = await Promise.all([
+                                    fetch(weatherUrl),
+                                    fetch(geoUrl)
+                                ]);
+                                
+                                const weatherData = await weatherRes.json();
+                                const geoData = await geoRes.json();
+                                
+                                if (weatherData.current_weather) {
+                                    const city = geoData.city || geoData.locality || "Unknown Location";
+                                    weatherText.textContent = `${city}: ${weatherData.current_weather.temperature}°C`;
+                                }
+                            } catch (error) {
+                                console.error(error);
+                                weatherText.textContent = "Weather unavailable";
+                            }
+                        }, () => {
+                            weatherText.textContent = "Location denied";
+                        });
+                    } else {
+                        weatherText.textContent = "Geolocation not supported";
+                    }
+                });
+            </script>
+        </header>
+
+        {% if user %}
+            <div class="dashboard">
+                <h2>Hello, {{ user['username'] }}!</h2>
+                <nav>
+                    <a href="{{ url_for('quiz') }}" class="btn">Start Quiz</a>
+                    <a href="{{ url_for('leaderboard') }}" class="btn">Leaderboard</a>
+                    <a href="{{ url_for('logout') }}" class="btn logout">Logout</a>
+                </nav>
+            </div>
+        {% else %}
+            <div class="welcome">
+                <p>Welcome to the ultimate Python logic playground.</p>
+                <a href="{{ url_for('login') }}" class="btn">Login / Register</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

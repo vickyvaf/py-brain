@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Start Quiz</h1>
+            <p>Player: {{ username }}</p>
+            <a href="{{ url_for('home') }}" class="btn-small">Back Home</a>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li class="{{ 'success' if 'Correct' in message else 'error' }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="quiz-card">
+            <h2>Question #{{ question.id }}</h2>
+            <p class="question-text">{{ question.question }}</p>
+            
+            <form action="{{ url_for('check_answer') }}" method="post">
+                <input type="hidden" name="question_id" value="{{ question.id }}">
+                <div class="options">
+                    {% for option in question.options %}
+                    <label class="option-label">
+                        <input type="radio" name="option" value="{{ option }}" required>
+                        {{ option }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn-submit">Submit Answer</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
