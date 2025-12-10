@@ -72,7 +72,11 @@
 4.  **Configure Environment**:
     Upload your `.env` file manually to the project folder, or set environment variables in the WSGI file.
 5.  **Initialize Database**:
-    Run `python database.py` in the console.
+    Since `database.db` is not in git, you must create it on the server:
+    ```bash
+    python database.py
+    ```
+    _This creates a new empty database on PythonAnywhere._
 6.  **Setup Web Tab**:
     - Point Source code to your folder.
     - Set Virtualenv path.
